@@ -1,9 +1,9 @@
 #pragma once
 
 #include "event.h"
-#include "loggerlevel1.h"
-#include "loggerlevel2.h"
-#include "loggerlevel3.h"
+class LoggerLevel1;
+class LoggerLevel2;
+class LoggerLevel3;
 
 enum Level {
 	Level1,
@@ -16,42 +16,15 @@ class Logger
 protected:
 	Logger(){};
 	Logger(char* fileName){};
-	virtual ~Logger() {};
+	
 
 public:
-	static Logger* GetLogger(Level level)
-	{
-		if (level == Level::Level1)
-		{			
-			return new LoggerLevel1;
-		}
-		if (level == Level::Level2)
-		{
-			return new LoggerLevel2;
-		}
-		if (level == Level::Level3)
-		{
-			return new LoggerLevel3;
-		}
-		
-	};
+	virtual ~Logger() {};
+	static Logger* GetLogger(Level level);
+	
 
-	static Logger* GetLogger(Level level, char* filename)
-	{
-		if (level == Level::Level1)
-		{
-			return new LoggerLevel1(filename);
-		}
-		if (level == Level::Level2)
-		{
-			return new LoggerLevel2(filename);
-		}
-		if (level == Level::Level3)
-		{
-			return new LoggerLevel3(filename);
-		}
+	static Logger* GetLogger(Level level, char* filename);
 
-	};
 
 	virtual Logger* Write(Event event) = 0;
 

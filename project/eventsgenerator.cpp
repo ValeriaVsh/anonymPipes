@@ -17,6 +17,24 @@ void EventsGenerator::generateEvents(int average_iterval_sec, std::atomic<bool> 
 		int interval = _generateInterval();
 		std::cout << "interval: " << interval << std::endl;
 		std::this_thread::sleep_for(std::chrono::seconds(interval));
+
+		Event* event = new Event(1);
+
+		Logger* logger1 = Logger::GetLogger(Level1);
+		logger1 = logger1->Write(*event);
+
+		Logger* logger2 = Logger::GetLogger(Level2);
+		logger2 = logger2->Write(*event);
+
+		Logger* logger3 = Logger::GetLogger(Level3);
+		logger3 = logger3->Write(*event);
+
+		delete event;
+		delete[] logger1;
+		delete[] logger2;
+		delete[] logger3;
+
+
 	}
 	
 }

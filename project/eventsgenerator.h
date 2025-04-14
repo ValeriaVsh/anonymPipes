@@ -7,6 +7,10 @@
 #include "thread"
 #include "chrono"
 #include "iostream"
+#include "logger.h"
+#include "loggerlevel1.h"
+#include "loggerlevel2.h"
+#include "loggerlevel3.h"
 
 class EventsGenerator
 {

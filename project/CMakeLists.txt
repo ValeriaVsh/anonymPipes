@@ -12,7 +12,7 @@ endif()
 project ("project")
 
 # Добавьте источник в исполняемый файл этого проекта.
-add_executable (project "project.cpp" "project.h" "event.h" "eventsgenerator.h" "eventsgenerator.cpp"  "logger.h" "loggerlevel1.h" "loggerlevel1.cpp" "loggerlevel2.h" "loggerlevel2.cpp" "loggerlevel3.h" "loggerlevel3.cpp")
+add_executable (project "project.cpp" "project.h" "event.h" "eventsgenerator.h" "eventsgenerator.cpp"  "logger.h" "loggerlevel1.h" "loggerlevel1.cpp" "loggerlevel2.h" "loggerlevel2.cpp" "loggerlevel3.h" "loggerlevel3.cpp" "logger.cpp")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET project PROPERTY CXX_STANDARD 20)

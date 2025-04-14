@@ -1,5 +1,7 @@
 #pragma once
 #include "logger.h"
+#include "event.h"
+
 
 class LoggerLevel1 : public Logger
 {
@@ -15,4 +17,5 @@ public:
 
 
 
+	//bool operator==(const LoggerLevel1& other) const;
 };
