@@ -18,16 +18,24 @@ void thr1func(EventsGenerator &gen, atomic<bool> &running, int interval)
 	gen.generateEvents(interval, running);
 
 }
+void thr2unc(Logger* logger, atomic<bool>& running)
+{
+	//logger.read from pipe
+
+}
 
 int main()
 {
 	int count_id = 0;
 
-	Event new_event(count_id);
+	//Event new_event(count_id);
+
+	Logger* logger = Logger::GetLogger(Level1);
 
 
 	string command;
 	EventsGenerator generator;
+	generator.setLogger(logger);
 	int default_interval{ 5 };
 	atomic<bool> running = true;
 
@@ -58,6 +66,7 @@ int main()
 		}
 
 	}
-	cout << "Event generation time: " << ctime(&new_event.curr_date_time) << endl;
+	delete[] logger;
+	//cout << "Event generation time: " << ctime(&new_event.curr_date_time) << endl;
 	return 0;
 }
