@@ -10,6 +10,7 @@
 #include "event.h"
 #include "eventsgenerator.h"
 #include <atomic>
+#include <string.h>
 
 using namespace std;
 
@@ -48,15 +49,17 @@ int main()
 		if (command == "date")
 		{
 			auto datetime{ chrono::system_clock::now() };
-			auto date{ floor<chrono::days>(datetime) };
-			cout << date<<endl;
+			//auto date{ floor<chrono::days>(datetime) };
+			chrono::year_month_day date{ floor<chrono::days>(datetime) };
+			
+			cout<<date << endl;
 		}
 		else if(command == "time")
 		{
 			auto datetime = chrono::system_clock::now();
 			auto date{ floor<chrono::days>(datetime) };
 			chrono::hh_mm_ss time{ floor<chrono::milliseconds>(datetime - date) };
-			cout << time << endl;
+			cout <<time << endl;
 
 		}
 		else if (command == "stop")
@@ -69,4 +72,33 @@ int main()
 	delete[] logger;
 	//cout << "Event generation time: " << ctime(&new_event.curr_date_time) << endl;
 	return 0;
+
+  /*
+   try {
+		// Create event generator
+		EventsGenerator generator;
+		
+		// Create logger
+		Logger* logger = Logger::GetLogger(Level1, "events.log");
+		
+		// Create and start logger thread
+		LoggerThread loggerThread(generator.GetPipeHandler(), logger);
+		loggerThread.Start();
+
+		// Run event generator
+		std::atomic<bool> running(true);
+		generator.generateEvents(2, running);// Cleanup
+		running = false;
+		loggerThread.Stop();
+		loggerThread.Join();
+		delete logger;
+
+		return 0;
+	}
+	catch (const std::exception& e) {
+		std::cerr << "Error: " << e.what() << std::endl;
+		return 1;
+	}
+  */
+
 }

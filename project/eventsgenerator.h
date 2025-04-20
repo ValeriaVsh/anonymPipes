@@ -13,6 +13,7 @@
 #include "loggerlevel2.h"
 #include "loggerlevel3.h"
 #include "Windows.h"
+#include "pipe_handler.h"
 
 class EventsGenerator
 {
@@ -22,6 +23,7 @@ public:
 	void generateEvents(int average_iterval_sec, std::atomic<bool> &running);
 	void resetAverageInterval(int& average_iterval_sec);
 	void setLogger(Logger* logger);
+	PipeHandler* GetPipeHandler() { return &pipeHandler; }
 
 private:
 	int _generateInterval();
@@ -32,8 +34,5 @@ private:
 	int _event_id{ 0 };
 	std::queue<Event> _events_queue;
 	Logger* _logger = nullptr;
-
-
-
-
+	PipeHandler pipeHandler;
 };

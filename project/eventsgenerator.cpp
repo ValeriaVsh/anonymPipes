@@ -2,12 +2,16 @@
 
 EventsGenerator::EventsGenerator()
 {
-
+	if (!pipeHandler.Initialize()) {
+		throw std::runtime_error("Failed to initialize pipe handler");
+	}
 }
+
 EventsGenerator::~EventsGenerator()
 {
 
 }
+
 void EventsGenerator::setLogger(Logger* logger)
 {
 	_logger = logger;
@@ -18,31 +22,23 @@ void EventsGenerator::generateEvents(int average_iterval_sec, std::atomic<bool> 
 	resetAverageInterval(average_iterval_sec);
 	while (running)
 	{
-		int interval = _generateInterval();
-		std::cout << "interval: " << interval << std::endl;
-		std::this_thread::sleep_for(std::chrono::seconds(interval));
+		Event event(_event_id++);
+		
+		// Write event to pipe
+		if (!pipeHandler.WriteEvent(event)) {
+			std::cerr << "Failed to write event to pipe" << std::endl;
+			continue;
+		}
 
-		Event* event = new Event(_event_id);
-		_events_queue.push(*event);
+		// Also write to logger if set
+		// if (_logger) {
+		// 	_logger->Write(event);
+		// }
 
-		Logger* logger1 = Logger::GetLogger(Level1);
-		logger1 = logger1->Write(*event);
-
-		/*Logger* logger2 = Logger::GetLogger(Level2);
-		logger2 = logger2->Write(*event);
-
-		Logger* logger3 = Logger::GetLogger(Level3);
-		logger3 = logger3->Write(*event);*/
-
-		delete event;
-		//delete[] logger1;
-		/*delete[] logger2;
-		delete[] logger3;*/
-
-
+		std::this_thread::sleep_for(std::chrono::seconds(_generateInterval()));
 	}
-	
 }
+
 void EventsGenerator::resetAverageInterval(int& average_iterval_sec)
 {
 	_interval_min = average_iterval_sec - 5;
@@ -51,11 +47,9 @@ void EventsGenerator::resetAverageInterval(int& average_iterval_sec)
 		_interval_min = 1;
 
 }
+
 int EventsGenerator::_generateInterval()
 {
 	srand((unsigned)time(NULL));
-	int interval{ _interval_min + rand() % _interval_max};
-
-
-	return interval;
+	return _interval_min + (rand() % (_interval_max - _interval_min + 1));
 }
