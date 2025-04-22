@@ -10,7 +10,7 @@
 #include "event.h"
 #include "eventsgenerator.h"
 #include <atomic>
-#include <string.h>
+#include "logger_thread.h"
 
 using namespace std;
 
@@ -19,11 +19,7 @@ void thr1func(EventsGenerator &gen, atomic<bool> &running, int interval)
 	gen.generateEvents(interval, running);
 
 }
-void thr2unc(Logger* logger, atomic<bool>& running)
-{
-	//logger.read from pipe
 
-}
 
 int main()
 {
@@ -36,7 +32,9 @@ int main()
 
 	string command;
 	EventsGenerator generator;
-	generator.setLogger(logger);
+	LoggerThread logger_thread(generator.GetPipeHandler(), logger);
+	logger_thread.Start();
+	//generator.setLogger(logger);
 	int default_interval{ 5 };
 	atomic<bool> running = true;
 
@@ -66,6 +64,9 @@ int main()
 		{
 			running = false;
 			th1.join();
+			logger_thread.Stop();
+			logger_thread.Join();
+			break;
 		}
 
 	}

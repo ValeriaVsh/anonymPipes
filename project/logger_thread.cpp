@@ -19,6 +19,7 @@ void LoggerThread::Start() {
 
 void LoggerThread::Stop() {
     running = false;
+    delete logger;
 }
 
 void LoggerThread::Join() {
@@ -31,6 +32,7 @@ void LoggerThread::Run() {
     Event event(0);
     while (running) {
         if (pipeHandler->ReadEvent(event)) {
+            std::cout << "logger thread received event with id: " << event.id << std::endl;
             logger->Write(event);
         }
         else {

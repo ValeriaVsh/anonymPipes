@@ -23,6 +23,8 @@ void EventsGenerator::generateEvents(int average_iterval_sec, std::atomic<bool> 
 	while (running)
 	{
 		Event event(_event_id++);
+		std::cout << "Event id: " << event.id << std::endl;
+		std::cout << "Event datetime: "<<event.curr_date_time << std::endl;
 		
 		// Write event to pipe
 		if (!pipeHandler.WriteEvent(event)) {
