@@ -35,4 +35,12 @@ bool PipeHandler::ReadEvent(Event& event) {
     DWORD bytesRead;
     return ReadFile(hReadPipe, &event, sizeof(Event), &bytesRead, NULL) 
            && bytesRead == sizeof(Event);
+}
+
+bool PipeHandler::HasDataToRead() {
+    DWORD bytesAvailable;
+    if (!PeekNamedPipe(hReadPipe, NULL, 0, NULL, &bytesAvailable, NULL)) {
+        return false;
+    }
+    return bytesAvailable >= sizeof(Event);
 } 

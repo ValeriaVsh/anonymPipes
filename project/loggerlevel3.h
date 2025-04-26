@@ -1,5 +1,8 @@
 #pragma once
 #include "logger.h"
+#include "event.h"
+#include "fstream"
+#include <chrono>
 
 class LoggerLevel3 : public Logger
 {
@@ -11,6 +14,9 @@ public:
 
 
 	LoggerLevel3* Write(Event event);
+
+private:
+	std::ofstream _myfile;
 
 
 

@@ -12,6 +12,7 @@ public:
     bool Initialize();
     bool WriteEvent(const Event& event);
     bool ReadEvent(Event& event);
+    bool HasDataToRead();
     HANDLE GetReadHandle() const { return hReadPipe; }
     HANDLE GetWriteHandle() const { return hWritePipe; }
 

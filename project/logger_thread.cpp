@@ -19,7 +19,6 @@ void LoggerThread::Start() {
 
 void LoggerThread::Stop() {
     running = false;
-    delete logger;
 }
 
 void LoggerThread::Join() {
@@ -31,13 +30,23 @@ void LoggerThread::Join() {
 void LoggerThread::Run() {
     Event event(0);
     while (running) {
-        if (pipeHandler->ReadEvent(event)) {
-            std::cout << "logger thread received event with id: " << event.id << std::endl;
-            logger->Write(event);
+        if (pipeHandler->HasDataToRead()) {
+            if (pipeHandler->ReadEvent(event)) {
+                std::cout << "logger thread received event with id: " << event.id << std::endl;
+                logger->Write(event);
+            }
         }
         else {
-            // Pipe read failed, might be closed or error
+            // No data available, sleep briefly to avoid busy waiting
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        }
+    }
+    
+    // Read any remaining events before shutting down
+    while (pipeHandler->HasDataToRead()) {
+        if (pipeHandler->ReadEvent(event)) {
+            std::cout << "logger thread received final event with id: " << event.id << std::endl;
+            logger->Write(event);
         }
     }
 } 

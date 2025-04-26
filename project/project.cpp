@@ -32,8 +32,8 @@ int main()
 
 	string command;
 	EventsGenerator generator;
-	LoggerThread logger_thread(generator.GetPipeHandler(), logger);
-	logger_thread.Start();
+	LoggerThread *logger_thread = new LoggerThread(generator.GetPipeHandler(), logger);
+	logger_thread->Start();
 	//generator.setLogger(logger);
 	int default_interval{ 5 };
 	atomic<bool> running = true;
@@ -63,43 +63,19 @@ int main()
 		else if (command == "stop")
 		{
 			running = false;
-			th1.join();
-			logger_thread.Stop();
-			logger_thread.Join();
 			break;
 		}
 
 	}
-	delete[] logger;
-	//cout << "Event generation time: " << ctime(&new_event.curr_date_time) << endl;
+	th1.join();
+	logger_thread->Stop();
+	logger_thread->Join();
+	delete logger;
+	
+	
+	
 	return 0;
 
-  /*
-   try {
-		// Create event generator
-		EventsGenerator generator;
-		
-		// Create logger
-		Logger* logger = Logger::GetLogger(Level1, "events.log");
-		
-		// Create and start logger thread
-		LoggerThread loggerThread(generator.GetPipeHandler(), logger);
-		loggerThread.Start();
-
-		// Run event generator
-		std::atomic<bool> running(true);
-		generator.generateEvents(2, running);// Cleanup
-		running = false;
-		loggerThread.Stop();
-		loggerThread.Join();
-		delete logger;
-
-		return 0;
-	}
-	catch (const std::exception& e) {
-		std::cerr << "Error: " << e.what() << std::endl;
-		return 1;
-	}
-  */
+ 
 
 }
