@@ -11,34 +11,30 @@
 #include "eventsgenerator.h"
 #include <atomic>
 #include "logger_thread.h"
+#include "eventgen_thread.h"
 
 using namespace std;
 
-void thr1func(EventsGenerator &gen, atomic<bool> &running, int interval)
-{
-	gen.generateEvents(interval, running);
-
-}
 
 
 int main()
 {
 	int count_id = 0;
 
-	//Event new_event(count_id);
-
 	Logger* logger = Logger::GetLogger(Level1);
 
 
 	string command;
-	EventsGenerator generator;
-	LoggerThread *logger_thread = new LoggerThread(generator.GetPipeHandler(), logger);
+	EventsGenerator* generator = new EventsGenerator;
+	LoggerThread *logger_thread = new LoggerThread(generator->GetPipeHandler(), logger);
 	logger_thread->Start();
-	//generator.setLogger(logger);
+	
 	int default_interval{ 5 };
 	atomic<bool> running = true;
+	EventGen_Thread* events_thread = new EventGen_Thread(generator, default_interval);
+	events_thread->Start();
 
-	thread th1(thr1func, ref(generator), ref(running), default_interval);
+	
 
 	while (running)
 	{
@@ -60,6 +56,26 @@ int main()
 			cout <<time << endl;
 
 		}
+		else if (command == "pause")
+		{
+			logger_thread->Stop();
+			logger_thread->Join();
+			events_thread->Stop();
+			events_thread->Join();
+
+			
+		}
+		else if (command == "resume")
+		{
+			logger_thread->Stop();
+			events_thread->Stop();
+			
+			logger_thread->Start();
+			events_thread->Start();
+			
+
+		}
+
 		else if (command == "stop")
 		{
 			running = false;
@@ -67,10 +83,17 @@ int main()
 		}
 
 	}
-	th1.join();
+	
 	logger_thread->Stop();
 	logger_thread->Join();
+	events_thread->Stop();
+	events_thread->Join();
+
+	
 	delete logger;
+	delete generator;
+	delete logger_thread;
+	delete events_thread;
 	
 	
 	
