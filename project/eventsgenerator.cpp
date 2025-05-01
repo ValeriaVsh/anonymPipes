@@ -35,11 +35,6 @@ void EventsGenerator::generateEvents(int average_iterval_sec, std::atomic<bool> 
 			continue;
 		}
 
-		// Also write to logger if set
-		// if (_logger) {
-		// 	_logger->Write(event);
-		// }
-
 		std::this_thread::sleep_for(std::chrono::seconds(_generateInterval()));
 	}
 }

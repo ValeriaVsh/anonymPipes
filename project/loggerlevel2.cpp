@@ -2,17 +2,20 @@
 
 LoggerLevel2::LoggerLevel2()
 {
-	_myfile.open("default_logs.txt", std::ios::app);
+	if(!_myfile.is_open())
+		_myfile.open("default_logs.txt", std::ios::app);
 
 }
 LoggerLevel2::LoggerLevel2(char* filename)
 {
-	_myfile.open(filename, std::ios::app);
+	if (!_myfile.is_open())
+		_myfile.open(filename, std::ios::app);
 
 }
 LoggerLevel2::~LoggerLevel2()
 {
-	_myfile.close();
+	if (_myfile.is_open())
+		_myfile.close();
 
 }
 

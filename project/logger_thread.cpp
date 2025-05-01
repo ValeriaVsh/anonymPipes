@@ -8,6 +8,7 @@ LoggerThread::LoggerThread(PipeHandler* pipeHandler, Logger* logger)
 LoggerThread::~LoggerThread() {
     Stop();
     Join();
+    
 }
 
 void LoggerThread::Start() {
@@ -25,6 +26,12 @@ void LoggerThread::Join() {
     if (thread.joinable()) {
         thread.join();
     }
+}
+
+void LoggerThread::ResetLogger(Logger* logger)
+{
+    delete this->logger;
+    this->logger = logger;
 }
 
 void LoggerThread::Run() {

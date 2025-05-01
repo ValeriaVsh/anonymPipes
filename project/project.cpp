@@ -56,6 +56,22 @@ int main()
 			cout <<time << endl;
 
 		}
+		
+		else if (command == "logger1")
+		{
+			logger = Logger::GetLogger(Level1);
+			logger_thread->ResetLogger(logger);
+		}
+		else if (command == "logger2")
+		{
+			logger = Logger::GetLogger(Level2);
+			logger_thread->ResetLogger(logger);
+		}
+		else if (command == "logger3")
+		{
+			logger = Logger::GetLogger(Level3);
+			logger_thread->ResetLogger(logger);
+		}
 		else if (command == "pause")
 		{
 			logger_thread->Stop();

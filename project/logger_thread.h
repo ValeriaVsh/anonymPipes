@@ -15,6 +15,8 @@ public:
     void Stop();
     void Join();
 
+    void ResetLogger(Logger* logger);
+
 private:
     void Run();
 
